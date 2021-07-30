@@ -5,7 +5,7 @@ A simple incubator using an ice box. peltier element and sensors
 
 - Ice box
 - Beehive main board
-- Beehive peltier control board
+- Beehive h-bridge board
 - Beehive temperature sensor board
 - LCD panel with I2C adapter (https://www.ebay.co.uk/itm/272626779592)
 - rotary know/keypad for external control
