@@ -13,10 +13,7 @@ class TempControl:
         self.HBPin1.value(0)
         self.HBPin2.value(0)
         
-        #define pin for fan
-        self.fanPin = machine.Pin(16,machine.Pin.OUT)
-        #turn fan off
-        self.fanPin.value(0)
+        
 
         #define pin for the temperature sensors (DS18B20+)
         # the device is on GPIO22
@@ -35,8 +32,6 @@ class TempControl:
         #temperature sensor1
         #temperature sensor2
         #external temperature sensor1
-        
-        #fan control1
 
         #turn all pins off
 
@@ -60,17 +55,13 @@ class TempControl:
         if newTemp<self.read_temp(rom=self.roms[0]):
             self.HBPin2.value(0)
             self.HBPin1.value(1)
-            self.fanPin.value(1)
 
         elif newTemp > self.read_temp(rom=self.roms[0]):
             self.HBPin1.value(0)
             self.HBPin2.value(1)
-            self.fanPin.value(1)
-
         else:
             self.HBPin1.value(0)
             self.HBPin2.value(0)
-            self.fanPin.value(0)
     
     def time_intervals(self, interval_ms=750):
         time1 = utime.ticks_ms()
