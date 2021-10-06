@@ -4,10 +4,10 @@ import onewire
 import ds18x20 #library specific for ds18 devices, possibly only for esp32?
 import utime
 class TempControl:
-    def __init__(self):
+    def __init__(self,sensorPin = 22,hBrigde1=5,hBridge2=18):
         #define pins for the H-Bridge (which will be controlling a peltier)
-        self.HBPin1 = machine.Pin(5,machine.Pin.OUT)
-        self.HBPin2 = machine.Pin(18,machine.Pin.OUT)
+        self.HBPin1 = machine.Pin(hBrigde1,machine.Pin.OUT)
+        self.HBPin2 = machine.Pin(hBridge2,machine.Pin.OUT)
         
         #make both pins go low
         self.HBPin1.value(0)
@@ -18,7 +18,7 @@ class TempControl:
         #define pin for the temperature sensors (DS18B20+)
         # the device is on GPIO22
         # create the onewire object
-        self.ow = onewire.OneWire(machine.Pin(22))
+        self.ow = onewire.OneWire(machine.Pin(sensorPin))
         
         self.ds = ds18x20.DS18X20(self.ow)
         #scan devices on bus
@@ -30,10 +30,12 @@ class TempControl:
         
 
         #temperature sensor1
+        self.ts1 = self.rom[0]
         #temperature sensor2
+        self.ts2 = self.rom[1]
+
         #external temperature sensor1
 
-        #turn all pins off
 
     def read_all_temps(self):
         self.ds.convert_temp()
@@ -52,16 +54,19 @@ class TempControl:
 
 
     def goal_temp(self, newTemp):
-        if newTemp<self.read_temp(rom=self.roms[0]):
-            self.HBPin2.value(0)
+        if newTemp<self.read_temp(rom=self.ts1):
             self.HBPin1.value(1)
+            self.HBPin2.value(0)
+            print("temperature lower than goal")
 
-        elif newTemp > self.read_temp(rom=self.roms[0]):
+        elif newTemp > self.read_temp(rom=self.ts1):
             self.HBPin1.value(0)
             self.HBPin2.value(1)
+            print("temperature higher than goal")
         else:
             self.HBPin1.value(0)
             self.HBPin2.value(0)
+            print("temperature just right")
     
     def time_intervals(self, interval_ms=750):
         time1 = utime.ticks_ms()

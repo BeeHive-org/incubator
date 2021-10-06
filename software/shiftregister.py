@@ -20,10 +20,10 @@ class ShiftRegister:
         self.srclr.value(1) # don't reset shift regs
 
     def clear(self):
-        self.clr.value(0) # clear shift regs
+        self.srclr.value(0) # clear shift regs
         self.rclk.value(1) # latch data to output
         self.rclk.value(0)
-        self.clr.value(1)
+        self.srclr.value(1)
 
     def shift(self, buf):
         self.spi.send(buf)
