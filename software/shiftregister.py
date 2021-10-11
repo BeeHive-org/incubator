@@ -8,10 +8,9 @@ class ShiftRegister:
         self.srclr = machine.Pin(srclr,machine.Pin.OUT)
         self.serIn = machine.Pin(serIn,machine.Pin.OUT)
         self.rclk = machine.Pin(rclk,machine.Pin.OUT)
-        spi = machine.SoftSPI(baudrate=1000000, 
-                            polarity=0, 
-                            phase=0, bits=8, 
-                            firstbit=MSB, sck=self.srclk, mosi=self.serIn, miso=None)
+        spi = machine.SPI(1, baudrate=1000000,
+                          sck=self.srclk, mosi=self.serIn)
+        spi.write(b'\xff')
         self.spi = spi 
         #self.rclk = rclk
         #self.oe = oe
@@ -26,12 +25,12 @@ class ShiftRegister:
         self.srclr.value(1)
 
     def shift(self, buf):
-        self.spi.send(buf)
+        self.spi.write(buf)
         self.rclk.value(1) # latch data to output
         self.rclk.value(0)
 
 
-#usage:
+#usage: 
 
 #from machine import Pin, softSPI
 
